@@ -1,44 +1,39 @@
-ISWAPPRO SHOPPING MASTER V23
-Universal purchasing and shopping manager.
+ISWAPPRO SHOPPING MASTER V26
+HTTPS CAMERA DEPLOYMENT & ANDROID TEST
 
-OPEN ON ANDROID
-1. Export a JSON backup from your existing app before replacing anything.
-2. Extract this ZIP using your phone's file manager.
-3. Open the extracted folder.
-4. Tap index.html and choose Chrome.
-5. Your app data remains in the same browser storage key when opened in the same browser profile. If data does not appear, import your JSON backup from Insights & Reports.
+LOCAL TEST
+1. Keep your previous version and export a JSON backup from Insights & Reports.
+2. Extract this ZIP fully using the Android Files app. Do not open index.html inside the ZIP preview.
+3. Open the extracted index.html in Chrome. Shopping lists and manual barcode entry should work.
+4. Camera access may be blocked for a local content:// file. This is a browser security restriction, not necessarily an app fault.
 
-BARCODE SCANNING
-- Tap Scan barcode in the shopping item form or inventory form.
-- V23 uses a delegated button handler so taps on the button and its contents are handled.
-- The app checks camera API availability, secure context and BarcodeDetector support, and reports the reason if scanning cannot start.
-- Allow camera permission when Chrome asks.
-- For reliable live camera scanning, serve the extracted app from HTTPS or localhost. Chrome/Android may block camera access from a content:// local file.
-- If live scanning is unavailable, type or paste the barcode into the barcode field and save the item.
+PUBLISH TO GITHUB PAGES (HTTPS)
+1. Open the ISwapPro-Shopping-Master repository on GitHub. Do not change the separate Career Hub repository.
+2. Upload/replace the V26 project files in the repository root. Keep index.html at the root and preserve the css/ and js/ folders.
+3. Open repository Settings > Pages.
+4. Under Build and deployment, choose Deploy from a branch.
+5. Select branch main and folder /(root), then Save.
+6. Wait for GitHub Pages deployment to complete. Open: https://mdugolab.github.io/ISwapPro-Shopping-Master/
+7. In Android Chrome, open the HTTPS page, tap the site controls icon beside the address, open Permissions, set Camera to Allow, then reload. If prompted, choose Allow while using the site.
+8. Open Add Item or Inventory > Scan barcode. Grant camera access. Point the rear camera at a clear EAN/UPC barcode in good light. Tap Stop camera when finished.
 
-PURCHASE LISTS
-- General Shopping: groceries, household items, clothing, electronics, personal care, education/office and other purchases.
-- Business Items: products, equipment, packaging, stationery and other business-related purchases.
-- Tools & Project Items: building materials, electrical/plumbing supplies, tools and project supplies.
-Lists stay separate. Changing tabs does not archive a list. Checkout archives only collected items; unchecked items remain active.
+CAMERA TROUBLESHOOTING
+- “Not a secure context”: use the HTTPS GitHub Pages address, not the local file.
+- “Permission denied”: Chrome site settings > Camera > Allow, then reload. Also check Android Settings > Apps > Chrome > Permissions > Camera.
+- “Camera busy”: close Camera, WhatsApp, or other apps using the camera.
+- “BarcodeDetector unavailable” or unsupported format: camera may work but this Chrome build lacks a compatible built-in barcode decoder. Manual barcode entry remains available. A future fallback decoder can be bundled if required.
+- HTTPS is necessary but does not guarantee BarcodeDetector support.
 
-QUANTITY CONTROLS
-Use + and − directly on each shopping-list row. Quantity updates are saved immediately. Whole units increment by 1; measured units increment by 0.1.
+DATA WARNING
+Local file storage and the GitHub Pages website have different browser origins. Data stored in the local-file version may not automatically appear on the HTTPS website. Export JSON from the old version and import it on the HTTPS version if needed. Keep your previous folder until you confirm the data is present.
 
 PROJECT STRUCTURE
-index.html — Android-compatible self-contained app.
-css/styles.css — matching editable stylesheet source.
-js/app.js — matching editable JavaScript source.
-assets/ — icons and images.
-documentation/ — project and QA notes.
+index.html
+css/styles.css
+js/app.js
+manifest.webmanifest
+sw.js
+README.txt / README.md / VERSION.txt
 
-DATA & PRIVACY
-Data is stored locally in this browser. No cloud sync or online payment is included. Export a JSON backup regularly. Keep the previous app folder until you verify the new version.
-
-
-V24 BARCODE SCANNER NOTES
-- The scan button now displays a specific diagnostic when camera access or barcode decoding is unavailable.
-- Live scanning requires HTTPS or localhost, camera permission, and Chrome BarcodeDetector support for product barcode formats.
-- Opening index.html from Android content:// storage may prevent camera access.
-- If the browser reports that BarcodeDetector is unavailable, use manual barcode entry; this build does not download a decoder and therefore remains usable offline.
-- For live scanning, publish this folder to a trusted HTTPS static host (for example GitHub Pages) and open the HTTPS address in Chrome.
+SCOPE
+Universal purchasing and shopping management only. No accounting, invoicing, payroll, CRM, booking, or catering workflows.
