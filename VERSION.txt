@@ -1,0 +1,7 @@
+ISwapPro Shopping Master V24
+Barcode Scanner Reliability & Diagnostics
+Built from the V23 source package.
+
+Changes: capture-phase scan-button handling; camera capability diagnostics; supported-format detection; explicit permission/status feedback; robust camera lifecycle cleanup; synchronised embedded and external JavaScript.
+
+Important: live barcode decoding requires a secure browser context and native BarcodeDetector support. This build does not bundle a third-party decoder, so offline manual barcode entry remains available where native decoding is unsupported.
