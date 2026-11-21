@@ -7,7 +7,7 @@
   <meta name="application-name" content="ISwapPro Shopping Master">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="description" content="ISwapPro Shopping Master — organise shopping lists for groceries, business items, household goods, electronics, tools and more.">
-  <title>ISwapPro Shopping Master V26</title>
+  <title>ISwapPro Shopping Master V25</title>
 <style>
 
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap');
@@ -40,7 +40,7 @@ body.dark{color-scheme:dark;--bg:#0c1220;--surface:#151e30;--surface-2:#1c273b;-
 .intelligence-panel{margin:12px 0 16px}.intelligence-panel .section-heading{align-items:center}.intelligence-panel .section-heading .primary-btn{white-space:nowrap}.intelligence-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:12px 0}.intelligence-metrics>div{padding:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;min-width:0}.intelligence-metrics span,.intelligence-metrics strong{display:block}.intelligence-metrics span{font-size:10px;color:var(--muted)}.intelligence-metrics strong{font:800 18px Manrope;margin-top:4px;overflow-wrap:anywhere}.reorder-queue{display:grid;gap:7px}.reorder-row{display:flex;align-items:center;gap:10px;padding:10px 11px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}.reorder-row>div{flex:1;min-width:0}.reorder-row b,.reorder-row small{display:block}.reorder-row b{font-size:12px}.reorder-row small{font-size:10px;color:var(--muted);margin-top:2px}.reorder-row>strong{font-size:11px;white-space:nowrap;color:var(--red)}.reorder-row .secondary-btn{padding:8px 10px;font-size:10px;white-space:nowrap}.intelligence-clear{padding:14px;border-radius:12px;background:var(--surface-2);color:var(--teal);font-size:12px;font-weight:700}.barcode-audit{padding:10px 12px;border-radius:10px;background:#fff1df;color:#985c16;font-size:11px;margin:10px 0 0}body.dark .barcode-audit{background:#49351f;color:#ffd18b}#addAllRestock:disabled{opacity:.45;cursor:not-allowed}@media(max-width:560px){.intelligence-panel .section-heading{align-items:stretch;flex-direction:column}.intelligence-panel .section-heading .primary-btn{width:100%}.intelligence-metrics{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.intelligence-metrics>div{padding:9px}.intelligence-metrics strong{font-size:15px}.reorder-row{flex-wrap:wrap}.reorder-row>div{min-width:calc(100% - 70px)}.reorder-row .secondary-btn{margin-left:auto}}
 
 
-/* V26 — HTTPS camera deployment and Android verification milestone */
+/* V25 — universal purchasing scope and Android-first refinements */
 /* Purchasing categories remain visible. Business administration stays outside Shopping Master. */
 .legacy-business-tab,#view-business,#businessPanel{display:none!important}
 .purpose-picker .field-caption{font-size:10px;letter-spacing:1px}
@@ -99,6 +99,9 @@ body.dark{color-scheme:dark;--bg:#0c1220;--surface:#151e30;--surface-2:#1c273b;-
  .mobile-add{bottom:calc(88px + env(safe-area-inset-bottom))!important;right:17px;z-index:20}
  .qty-stepper strong{min-width:30px;font-variant-numeric:tabular-nums}
 }
+
+/* V26 barcode scanner controls */
+.scanner-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.barcode-scanner video{min-height:180px;object-fit:contain;touch-action:pan-y}
 
 </style>
 </head>
@@ -324,7 +327,7 @@ body.dark{color-scheme:dark;--bg:#0c1220;--surface:#151e30;--surface-2:#1c273b;-
       <label>Inventory purpose<select id="stockType"><option value="grocery">General purchases</option><option value="stock">Business purchases</option><option value="material">Tools & project purchases</option></select></label>
       <label>Product name<input id="stockName" required maxlength="80" placeholder="e.g. Rice"></label>
       <div class="form-two"><label>Barcode / EAN / UPC<input id="stockBarcode" maxlength="80" inputmode="numeric" placeholder="Scan or enter barcode"></label><button type="button" class="secondary-btn scan-trigger" id="scanBarcode">▦ Scan barcode</button></div>
-      <div id="barcodeScanner" class="barcode-scanner" hidden><video id="barcodeVideo" playsinline muted></video><p id="scannerStatus" class="dialog-note">Point the camera at a product barcode.</p><button type="button" class="secondary-btn" id="stopScanner">Stop camera</button></div>
+      <div id="barcodeScanner" class="barcode-scanner" hidden><video id="barcodeVideo" playsinline muted></video><p id="scannerStatus" class="dialog-note">Point the camera at a product barcode.</p><div class="scanner-actions"><button type="button" class="secondary-btn" id="scannerTorch" hidden>🔦 Light off</button><button type="button" class="secondary-btn" id="stopScanner">Stop camera</button></div></div>
       <label>Product photo<input id="stockPhoto" type="file" accept="image/*" capture="environment"></label><div id="stockPhotoPreview" class="stock-photo-preview" hidden></div>
       <div class="form-two"><label>Current quantity<input id="stockQty" type="number" min="0" max="99999" value="1" required></label><label>Unit<select id="stockUnit"><option>each</option><option>pack</option><option>kg</option><option>g</option><option>litre</option><option>ml</option><option>dozen</option><option>box</option><option>bottle</option></select></label></div>
       <div class="form-two"><label>Minimum stock level<input id="stockMin" type="number" min="0" max="99999" value="1" required></label><label>Category<select id="stockCategory"><option>Other</option><option>Vegetables</option><option>Fruit</option><option>Dairy</option><option>Bakery</option><option>Meat & Fish</option><option>Frozen</option><option>Drinks</option><option>Pantry</option><option>Household</option><option>Personal Care</option></select></label></div>
@@ -554,6 +557,38 @@ body.dark{color-scheme:dark;--bg:#0c1220;--surface:#151e30;--surface-2:#1c273b;-
   }
   function renderAll(){renderDashboard();renderItems();renderInventory();renderHistory();renderInsights();}
   function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+
+  function normalizeBarcode(value){return String(value||'').trim().replace(/[\s-]+/g,'').toUpperCase();}
+  function barcodeMatches(code,excludeId=''){
+    const key=normalizeBarcode(code);if(!key)return [];
+    const rows=[...state.items.map(x=>({...x,_source:'shopping'})),...state.inventory.map(x=>({...x,_source:'inventory'}))];
+    return rows.filter(x=>x.id!==excludeId&&normalizeBarcode(x.barcode)===key);
+  }
+  async function lookupProductByBarcode(code,kind){
+    const key=normalizeBarcode(code);if(!key)return null;
+    const nameInput=kind==='stock'?$('#stockName'):$('#itemName');
+    const status=kind==='stock'?$('#scannerStatus'):$('#shoppingScannerStatus');
+    if(status)status.textContent='Barcode captured. Looking up product information…';
+    // Open Food Facts is a public product catalogue; lookup is optional and never blocks saving.
+    try{
+      const response=await fetch('https://world.openfoodfacts.org/api/v2/product/'+encodeURIComponent(key)+'.json?fields=product_name,product_name_en,brands,quantity,categories_tags,image_front_url',{headers:{'Accept':'application/json'}});
+      if(!response.ok)throw new Error('Catalogue unavailable');
+      const data=await response.json();
+      if(data.status!==1||!data.product){if(status)status.textContent='Barcode captured: '+key+'. No product record found; enter the item name manually.';return null;}
+      const p=data.product;const productName=String(p.product_name_en||p.product_name||'').trim();
+      if(productName&&nameInput&&!nameInput.value.trim())nameInput.value=productName;
+      if(kind==='shopping'&&p.quantity&&!$('#itemNotes').value.trim())$('#itemNotes').value='Pack size: '+p.quantity;
+      const details=[productName,p.brands?'Brand: '+p.brands:'',p.quantity?'Pack: '+p.quantity:''].filter(Boolean).join(' · ');
+      if(status)status.textContent='Product found: '+(details||key)+'. Check the item name before saving.';
+      return p;
+    }catch(err){if(status)status.textContent='Barcode captured: '+key+'. Product lookup unavailable; you can still save the item manually.';return null;}
+  }
+  function warnDuplicateBarcode(code,excludeId=''){
+    const matches=barcodeMatches(code,excludeId);if(!matches.length)return false;
+    const first=matches[0];
+    return !confirm('This barcode is already assigned to “'+first.name+'” ('+first._source+'). Save another record with the same barcode anyway?');
+  }
+
   const FORM_CATEGORIES = {
     grocery:["Groceries","Vegetables","Fruit","Dairy","Bakery","Meat & Fish","Frozen","Drinks","Pantry","Household Items","Clothing & Accessories","Electronics","Personal Care & Health","Education & Office","Other Purchases","Other"],
     stock:["Business Products","Equipment","Packaging","Stationery","Electronics","Clothing & Accessories","Tools & Equipment","Homeware","Automotive","Other"],
@@ -591,7 +626,7 @@ body.dark{color-scheme:dark;--bg:#0c1220;--surface:#151e30;--surface-2:#1c273b;-
     }else{
       specific=`<div class="form-section-title">MATERIAL & JOB DETAILS</div><div class="form-two">${selectField('itemCategory','Material category',cats,category)}${fieldLabel('itemProject','Project / job name',values.itemProject,'e.g. Office repainting')}</div>${fieldLabel('itemService','Service being delivered',values.itemService,'e.g. Painting, plumbing, catering') }<div class="form-two">${fieldLabel('itemPrice','Estimated cost per unit',values.itemPrice,'0.00','number','min="0" step="0.01"')}${selectField('itemPriority','Purchase priority',['Low','Medium','High'],(values.itemPriority||'medium').replace(/^./,c=>c.toUpperCase()))}</div><div class="form-section-title">SUPPLIER DETAILS</div><div class="form-two supplier-fields">${fieldLabel('itemStore','Supplier / store name',values.itemStore,'e.g. building supplier')}${fieldLabel('itemLocation','Supplier location',values.itemLocation,'City, area or branch')}</div><label>Material notes<textarea id="itemNotes" rows="3" maxlength="300" placeholder="Specification, colour, size or job instructions…">${esc(values.itemNotes||'')}</textarea></label>`;
     }
-    $('#purposeFormFields').innerHTML=`<div class="purpose-fields">${fieldLabel('itemName',type==='grocery'?'Item name':type==='stock'?'Business item name':'Purchase item name',values.itemName,meta.placeholder,'text','required maxlength="100"')}<div class="form-two">${fieldLabel('itemQty','Quantity',qty,'1','number','min="0.01" max="999999" step="any" required')}${selectField('itemUnit','Unit',units,unit)}</div><div class="form-two barcode-entry">${fieldLabel('itemBarcode','Barcode / EAN / UPC',values.itemBarcode,'Scan or enter barcode','text','maxlength="80" inputmode="numeric"')}<button type="button" class="secondary-btn scan-trigger" id="scanShoppingBarcode">▦ Scan barcode</button></div><div id="shoppingBarcodeScanner" class="barcode-scanner" hidden><video id="shoppingBarcodeVideo" playsinline muted></video><p id="shoppingScannerStatus" class="dialog-note">Point the camera at a product barcode.</p><button type="button" class="secondary-btn" id="stopShoppingScanner">Stop camera</button></div>${specific}</div>`;
+    $('#purposeFormFields').innerHTML=`<div class="purpose-fields">${fieldLabel('itemName',type==='grocery'?'Item name':type==='stock'?'Business item name':'Purchase item name',values.itemName,meta.placeholder,'text','required maxlength="100"')}<div class="form-two">${fieldLabel('itemQty','Quantity',qty,'1','number','min="0.01" max="999999" step="any" required')}${selectField('itemUnit','Unit',units,unit)}</div><div class="form-two barcode-entry">${fieldLabel('itemBarcode','Barcode / EAN / UPC',values.itemBarcode,'Scan or enter barcode','text','maxlength="80" inputmode="numeric"')}<button type="button" class="secondary-btn scan-trigger" id="scanShoppingBarcode">▦ Scan barcode</button></div><div id="shoppingBarcodeScanner" class="barcode-scanner" hidden><video id="shoppingBarcodeVideo" playsinline muted></video><p id="shoppingScannerStatus" class="dialog-note">Point the camera at a product barcode.</p><div class="scanner-actions"><button type="button" class="secondary-btn" id="shoppingScannerTorch" hidden>🔦 Light off</button><button type="button" class="secondary-btn" id="stopShoppingScanner">Stop camera</button></div></div>${specific}</div>`;
   }
   $$('.purpose-option').forEach(btn=>btn.addEventListener('click',()=>{purposeDrafts[activePurpose]=formValues();activePurpose=btn.dataset.purpose;renderPurposeFields(purposeDrafts[activePurpose]||{});}));
   function openItem(id){
@@ -637,12 +672,17 @@ body.dark{color-scheme:dark;--bg:#0c1220;--surface:#151e30;--surface-2:#1c273b;-
       if(!formats.length)throw new Error('This browser does not support common product barcode formats.');
       const detector=new window.BarcodeDetector({formats});
       panel.hidden=false;status.textContent='Requesting camera permission…';
-      const stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}}});
+      const stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080},frameRate:{ideal:30,max:30}}});
       if(stock)scannerStream=stream;else shoppingScannerStream=stream;
       activeScannerKind=kind;
-      video.setAttribute('playsinline','');video.muted=true;video.srcObject=stream;
+      const track=stream.getVideoTracks()[0];
+      // Request continuous autofocus when the browser exposes this camera control.
+      try{const caps=track.getCapabilities?track.getCapabilities():{};if(caps.focusMode&&caps.focusMode.includes('continuous'))await track.applyConstraints({advanced:[{focusMode:'continuous'}]});}catch(focusErr){}
+      video.setAttribute('playsinline','');video.muted=true;video.autoplay=true;video.srcObject=stream;
       await video.play();
-      status.textContent='Camera active. Hold one product barcode inside the camera view.';
+      status.textContent='Camera active. Move the barcode slowly into focus, keep it flat, and fill the frame. Use the light button if needed.';
+      const torchButton=$(stock?'#scannerTorch':'#shoppingScannerTorch');
+      if(torchButton){const caps=track.getCapabilities?track.getCapabilities():{};torchButton.hidden=!(caps.torch===true);torchButton.dataset.enabled='false';torchButton.textContent='🔦 Light off';}
       const scan=async()=>{
         if(stock?!scannerStream:!shoppingScannerStream)return;
         if(video.readyState>=2&&video.videoWidth>0){
@@ -652,7 +692,8 @@ body.dark{color-scheme:dark;--bg:#0c1220;--surface:#151e30;--surface-2:#1c273b;-
               input.value=codes[0].rawValue;
               input.dispatchEvent(new Event('input',{bubbles:true}));
               status.textContent='Barcode captured: '+codes[0].rawValue;
-              stop();notify('Barcode captured successfully');return;
+              stop();notify('Barcode captured successfully');
+              lookupProductByBarcode(codes[0].rawValue,stock?'stock':'shopping');return;
             }
           }catch(readErr){status.textContent='Camera is running. Adjust focus and lighting, then hold the barcode steady.';}
         }
@@ -673,16 +714,20 @@ body.dark{color-scheme:dark;--bg:#0c1220;--surface:#151e30;--surface-2:#1c273b;-
     const target=e.target instanceof Element?e.target:null;if(!target)return;
     const scan=target.closest('#scanBarcode,#scanShoppingBarcode');
     if(scan){e.preventDefault();e.stopImmediatePropagation();startBarcodeScan(scan.id==='scanBarcode'?'stock':'shopping');return;}
+    const torch=target.closest('#scannerTorch,#shoppingScannerTorch');
+    if(torch){e.preventDefault();const stream=torch.id==='scannerTorch'?scannerStream:shoppingScannerStream;const track=stream&&stream.getVideoTracks()[0];if(!track)return;const next=torch.dataset.enabled!=='true';track.applyConstraints({advanced:[{torch:next}]}).then(()=>{torch.dataset.enabled=String(next);torch.textContent=next?'🔦 Light on':'🔦 Light off';}).catch(()=>{torch.hidden=true;notify('Flashlight control is not supported by this camera.');});return;}
     if(target.closest('#stopScanner')){e.preventDefault();stopBarcodeScanner();return;}
     if(target.closest('#stopShoppingScanner')){e.preventDefault();stopShoppingBarcodeScanner();}
   },true);
   $('#itemDialog').addEventListener('close',stopShoppingBarcodeScanner);
+  document.addEventListener('focusout',e=>{if(e.target&&e.target.id==='itemBarcode'&&e.target.value.trim())lookupProductByBarcode(e.target.value,'shopping');if(e.target&&e.target.id==='stockBarcode'&&e.target.value.trim())lookupProductByBarcode(e.target.value,'stock');});
 
   $('#itemForm').addEventListener('submit',e=>{
     e.preventDefault();const name=$('#itemName').value.trim();if(!name){notify('Enter an item name.');return;}
     const id=$('#editId').value,existing=state.items.find(i=>i.id===id),read=id=>document.getElementById(id)?.value||'';purposeDrafts[activePurpose]=formValues();
     const priority=(read('itemPriority')||'Medium').toLowerCase();
     const item={id:id||uid(),name,type:activePurpose,qty:Math.max(.01,Math.min(999999,Number(read('itemQty'))||1)),unit:read('itemUnit')||'each',category:read('itemCategory')||'Other',priority,price:Math.max(0,Number(read('itemPrice'))||0),store:read('itemStore').trim(),location:read('itemLocation').trim(),notes:read('itemNotes').trim(),sku:read('itemSku').trim(),sellPrice:Math.max(0,Number(read('itemSellPrice'))||0),reorder:Math.max(0,Number(read('itemReorder'))||0),project:read('itemProject').trim(),service:read('itemService').trim(),barcode:read('itemBarcode').trim(),done:existing?.done||false,created:existing?.created||Date.now()};
+    if(item.barcode&&warnDuplicateBarcode(item.barcode,id))return;
     if(existing)Object.assign(existing,item);else state.items.unshift(item);
     activeListType=activePurpose;
     filters.category="all";
@@ -738,7 +783,7 @@ body.dark{color-scheme:dark;--bg:#0c1220;--surface:#151e30;--surface-2:#1c273b;-
 
 
   $("#stockType").addEventListener("change",refreshStockPricing);$("#stockCost").addEventListener("input",refreshStockPricing);$("#stockSell").addEventListener("input",refreshStockPricing);
-  $("#stockForm").addEventListener("submit",e=>{e.preventDefault();const name=$("#stockName").value.trim();if(!name)return;const id=$("#stockEditId").value,old=state.inventory.find(x=>x.id===id),qty=Math.max(0,Number($("#stockQty").value)||0);const record={id:id||uid(),type:$("#stockType").value,name,qty,min:Math.max(0,Number($("#stockMin").value)||0),unit:$("#stockUnit").value,category:$("#stockCategory").value,store:$("#stockStore").value.trim(),location:$("#stockLocation").value.trim(),costPrice:Math.max(0,Number($("#stockCost").value)||0),sellPrice:Math.max(0,Number($("#stockSell").value)||0),barcode:$("#stockBarcode").value.trim(),photo:pendingStockPhoto!==null?pendingStockPhoto:(old?.photo||"")};if(old){const delta=qty-Number(old.qty||0);Object.assign(old,record);if(delta)logStockMovement(old,delta,"Manual quantity adjustment");}else{state.inventory.push(record);if(qty)logStockMovement(record,qty,"Opening balance");}pendingStockPhoto=null;activeInventoryType=record.type;stopBarcodeScanner();save();closeDialog("stockDialog");renderInventory();notify(old?"Inventory item updated":"Inventory item added");});
+  $("#stockForm").addEventListener("submit",e=>{e.preventDefault();const name=$("#stockName").value.trim();if(!name)return;const id=$("#stockEditId").value,old=state.inventory.find(x=>x.id===id),qty=Math.max(0,Number($("#stockQty").value)||0);const record={id:id||uid(),type:$("#stockType").value,name,qty,min:Math.max(0,Number($("#stockMin").value)||0),unit:$("#stockUnit").value,category:$("#stockCategory").value,store:$("#stockStore").value.trim(),location:$("#stockLocation").value.trim(),costPrice:Math.max(0,Number($("#stockCost").value)||0),sellPrice:Math.max(0,Number($("#stockSell").value)||0),barcode:$("#stockBarcode").value.trim(),photo:pendingStockPhoto!==null?pendingStockPhoto:(old?.photo||"")};if(record.barcode&&warnDuplicateBarcode(record.barcode,id))return;if(old){const delta=qty-Number(old.qty||0);Object.assign(old,record);if(delta)logStockMovement(old,delta,"Manual quantity adjustment");}else{state.inventory.push(record);if(qty)logStockMovement(record,qty,"Opening balance");}pendingStockPhoto=null;activeInventoryType=record.type;stopBarcodeScanner();save();closeDialog("stockDialog");renderInventory();notify(old?"Inventory item updated":"Inventory item added");});
   $("#inventoryList").addEventListener("click",e=>{const b=e.target.closest("[data-stock-action]");if(!b)return;const card=b.closest("[data-stock-id]"),x=state.inventory.find(v=>v.id===card.dataset.stockId);if(!x)return;const a=b.dataset.stockAction;if(a==="sale"){if(Number(x.qty)<=0){notify("No stock available to sell.","error");return;}$("#saleStockId").value=x.id;$("#saleProductName").textContent=`${x.name} · Available: ${qtyText(x.qty,x.unit)} ${x.unit}`;$("#saleQty").max=String(x.qty);$("#saleQty").value="1";$("#salePrice").value=Number(x.sellPrice)||0;updateSalePreview();openDialog("saleDialog");return;}if(a==="edit")openStock(x.id);if(a==="plus"){const step=qtyStep(x.unit);x.qty=cleanQty(Math.min(99999,Number(x.qty)+step),x.unit,0);logStockMovement(x,step,"Manual stock increase");}if(a==="minus"){if(Number(x.qty)>0){const step=qtyStep(x.unit);const delta=Math.min(step,Number(x.qty));x.qty=cleanQty(Math.max(0,Number(x.qty)-step),x.unit,0);logStockMovement(x,-delta,"Manual stock decrease");}}if(a==="plus"||a==="minus"){save();renderInventory();}if(a==="restock"){const existing=state.items.find(i=>i.name.toLowerCase()===x.name.toLowerCase()&&(i.type||"grocery")===(x.type||"grocery")&&!i.done);if(existing){existing.qty+=Math.max(1,Number(x.min)-Number(x.qty));}else state.items.unshift({id:uid(),name:x.name,type:x.type||"grocery",qty:Math.max(1,Number(x.min)-Number(x.qty)),unit:x.unit,category:x.category,priority:"medium",price:0,store:x.store||"",location:x.location||"",notes:"Restock from inventory",done:false,created:Date.now()});activeListType=x.type||"grocery";save();renderAll();navigate("shopping");notify(`Restock item added to ${TYPE_LABELS[activeListType]} list`);}});
   $("#addStockTop").addEventListener("click",()=>openStock());$$("[data-inventory-type]").forEach(b=>b.addEventListener("click",()=>{activeInventoryType=b.dataset.inventoryType;$("#stockSearch").value="";$("#stockFilter").value="all";renderInventory();}));$("#stockSearch").addEventListener("input",renderInventory);$("#stockFilter").addEventListener("change",renderInventory);
   $("#reorderQueue").addEventListener("click",e=>{const b=e.target.closest("[data-restock-one]");if(!b)return;const item=state.inventory.find(x=>x.id===b.dataset.restockOne);if(!item)return;const qty=addInventoryRestockToList(item);save();renderAll();notify(`${item.name}: ${qty} ${item.unit||"each"} added to ${TYPE_LABELS[item.type||"grocery"]} list`);});
@@ -847,7 +892,6 @@ body.dark{color-scheme:dark;--bg:#0c1220;--surface:#151e30;--surface-2:#1c273b;-
   applyTheme();renderAll();
   if("serviceWorker" in navigator && (location.protocol==="https:"||location.hostname==="localhost"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
 })();
-
 </script>
 </body>
 </html>

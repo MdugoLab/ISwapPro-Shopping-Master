@@ -1,3 +1,1 @@
-# ISwapPro Shopping Master V26
-
-HTTPS camera deployment and Android verification milestone. See `README.txt` for GitHub Pages setup, camera permissions, troubleshooting, and data migration notes.
+ISwapPro Shopping Master V27 — Barcode recognition, optional product lookup and duplicate barcode protection. See README.txt for setup and compatibility notes.

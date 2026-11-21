@@ -1,18 +1,4 @@
-ISwapPro Shopping Master V26
-HTTPS Camera Deployment & Android Verification Milestone
-
-Built from the verified V25 project. This milestone preserves the V25 shopping features and prepares the project for secure-host camera testing.
-
-WHAT IS INCLUDED
-- General Shopping, Business Items, and Tools & Project Items remain separate purchasing lists.
-- Category selection remains available in Add Item, Inventory, and Insights.
-- Barcode entry and the existing camera scanner are preserved for shopping items and inventory.
-- Camera diagnostics explain secure-context, camera API, permission, and BarcodeDetector limitations.
-- Embedded CSS/JavaScript remain synchronised with css/styles.css and js/app.js.
-- Existing localStorage key is retained: iswappro_shopping_cart_v1.
-
-CAMERA REQUIREMENTS
-Live camera scanning requires: (1) HTTPS or localhost, (2) Chrome camera permission, (3) navigator.mediaDevices.getUserMedia support, and (4) BarcodeDetector support for a product barcode format. A local Android file opened through content:// may not qualify as a secure context. A permission prompt alone does not guarantee barcode decoding support.
-
-IMPORTANT TEST STATUS
-Static JavaScript syntax, embedded-source synchronisation, and ZIP integrity are checked. Live camera operation has NOT yet been verified on the user's Android device; that must be tested after deployment over HTTPS.
+ISwapPro Shopping Master
+Version: V27
+Milestone: Barcode recognition, product lookup and duplicate protection
+Base: V26
