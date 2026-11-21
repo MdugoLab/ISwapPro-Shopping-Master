@@ -303,31 +303,56 @@
       }
       if(!formats.length)throw new Error('This browser does not support common product barcode formats.');
       const detector=new window.BarcodeDetector({formats});
-      panel.hidden=false;status.textContent='Requesting camera permission…';
+      panel.hidden=false;status.textContent='Opening rear camera…';
       const stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080},frameRate:{ideal:30,max:30}}});
       if(stock)scannerStream=stream;else shoppingScannerStream=stream;
       activeScannerKind=kind;
       const track=stream.getVideoTracks()[0];
-      // Request continuous autofocus when the browser exposes this camera control.
-      try{const caps=track.getCapabilities?track.getCapabilities():{};if(caps.focusMode&&caps.focusMode.includes('continuous'))await track.applyConstraints({advanced:[{focusMode:'continuous'}]});}catch(focusErr){}
+      const caps=track.getCapabilities?track.getCapabilities():{};
+      const settings=track.getSettings?track.getSettings():{};
+      // Autofocus is device-dependent. Prefer continuous mode and fall back to single-shot when offered.
+      try{
+        if(caps.focusMode){
+          const mode=caps.focusMode.includes('continuous')?'continuous':(caps.focusMode.includes('single-shot')?'single-shot':null);
+          if(mode)await track.applyConstraints({advanced:[{focusMode:mode}]});
+        }
+      }catch(focusErr){}
       video.setAttribute('playsinline','');video.muted=true;video.autoplay=true;video.srcObject=stream;
+      video.style.display='block';video.style.margin='0 auto';video.style.width='auto';video.style.maxWidth='100%';video.style.height='min(68vw, 320px)';video.style.objectFit='contain';video.style.background='transparent';
       await video.play();
-      status.textContent='Camera active. Move the barcode slowly into focus, keep it flat, and fill the frame. Use the light button if needed.';
+      // Keep the video preview proportional to the actual camera stream; don't stretch portrait video into a landscape box.
+      if(video.videoWidth&&video.videoHeight)video.style.aspectRatio=video.videoWidth+'/'+video.videoHeight;
+      status.textContent='Camera active · '+(settings.width||video.videoWidth)+' × '+(settings.height||video.videoHeight)+'. Hold the barcode flat, close enough to fill the guide, and wait for focus.';
       const torchButton=$(stock?'#scannerTorch':'#shoppingScannerTorch');
-      if(torchButton){const caps=track.getCapabilities?track.getCapabilities():{};torchButton.hidden=!(caps.torch===true);torchButton.dataset.enabled='false';torchButton.textContent='🔦 Light off';}
+      if(torchButton){torchButton.hidden=!(caps.torch===true);torchButton.dataset.enabled='false';torchButton.textContent='🔦 Light off';}
+      // Expose a zoom control only when the camera reports hardware zoom support.
+      let zoomControl=$(stock?'#scannerZoom':'#shoppingScannerZoom');
+      if(!zoomControl){
+        const actions=panel.querySelector('.scanner-actions');
+        if(actions){zoomControl=document.createElement('label');zoomControl.id=stock?'scannerZoom':'shoppingScannerZoom';zoomControl.className='scanner-zoom';zoomControl.innerHTML='<span>Zoom</span><input type="range" min="1" max="3" step="0.1" value="1" aria-label="Camera zoom">';actions.prepend(zoomControl);}
+      }
+      if(zoomControl){
+        const range=zoomControl.querySelector('input');
+        const zoom=caps.zoom;
+        zoomControl.hidden=!(zoom&&range);
+        if(zoom&&range){range.min=String(Math.max(1,zoom.min||1));range.max=String(Math.min(5,zoom.max||3));range.step=String(zoom.step||0.1);range.value=String(Math.max(1,zoom.min||1));range.oninput=async()=>{try{await track.applyConstraints({advanced:[{zoom:Number(range.value)}]});}catch(e){status.textContent='Zoom is not available at this setting on this camera.';}};}
+      }
+      let busy=false, lastRead=0;
       const scan=async()=>{
         if(stock?!scannerStream:!shoppingScannerStream)return;
-        if(video.readyState>=2&&video.videoWidth>0){
+        if(!busy&&video.readyState>=2&&video.videoWidth>0&&Date.now()-lastRead>180){
+          busy=true;lastRead=Date.now();
           try{
             const codes=await detector.detect(video);
             if(codes&&codes.length&&codes[0].rawValue){
-              input.value=codes[0].rawValue;
-              input.dispatchEvent(new Event('input',{bubbles:true}));
-              status.textContent='Barcode captured: '+codes[0].rawValue;
+              const value=codes[0].rawValue;
+              input.value=value;input.dispatchEvent(new Event('input',{bubbles:true}));
+              status.textContent='Barcode captured: '+value;
               stop();notify('Barcode captured successfully');
-              lookupProductByBarcode(codes[0].rawValue,stock?'stock':'shopping');return;
+              lookupProductByBarcode(value,stock?'stock':'shopping');return;
             }
-          }catch(readErr){status.textContent='Camera is running. Adjust focus and lighting, then hold the barcode steady.';}
+          }catch(readErr){status.textContent='Camera is active, but no barcode was decoded. Move closer, keep the code flat, improve lighting, and allow the camera to focus.';}
+          finally{busy=false;}
         }
         if(stock)stockScanFrame=requestAnimationFrame(scan);else shoppingScanFrame=requestAnimationFrame(scan);
       };
