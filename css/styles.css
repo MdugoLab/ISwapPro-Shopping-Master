@@ -29,7 +29,7 @@ body.dark{color-scheme:dark;--bg:#0c1220;--surface:#151e30;--surface-2:#1c273b;-
 .intelligence-panel{margin:12px 0 16px}.intelligence-panel .section-heading{align-items:center}.intelligence-panel .section-heading .primary-btn{white-space:nowrap}.intelligence-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:12px 0}.intelligence-metrics>div{padding:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;min-width:0}.intelligence-metrics span,.intelligence-metrics strong{display:block}.intelligence-metrics span{font-size:10px;color:var(--muted)}.intelligence-metrics strong{font:800 18px Manrope;margin-top:4px;overflow-wrap:anywhere}.reorder-queue{display:grid;gap:7px}.reorder-row{display:flex;align-items:center;gap:10px;padding:10px 11px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}.reorder-row>div{flex:1;min-width:0}.reorder-row b,.reorder-row small{display:block}.reorder-row b{font-size:12px}.reorder-row small{font-size:10px;color:var(--muted);margin-top:2px}.reorder-row>strong{font-size:11px;white-space:nowrap;color:var(--red)}.reorder-row .secondary-btn{padding:8px 10px;font-size:10px;white-space:nowrap}.intelligence-clear{padding:14px;border-radius:12px;background:var(--surface-2);color:var(--teal);font-size:12px;font-weight:700}.barcode-audit{padding:10px 12px;border-radius:10px;background:#fff1df;color:#985c16;font-size:11px;margin:10px 0 0}body.dark .barcode-audit{background:#49351f;color:#ffd18b}#addAllRestock:disabled{opacity:.45;cursor:not-allowed}@media(max-width:560px){.intelligence-panel .section-heading{align-items:stretch;flex-direction:column}.intelligence-panel .section-heading .primary-btn{width:100%}.intelligence-metrics{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.intelligence-metrics>div{padding:9px}.intelligence-metrics strong{font-size:15px}.reorder-row{flex-wrap:wrap}.reorder-row>div{min-width:calc(100% - 70px)}.reorder-row .secondary-btn{margin-left:auto}}
 
 
-/* V26 — HTTPS camera deployment and Android verification milestone */
+/* V25 — universal purchasing scope and Android-first refinements */
 /* Purchasing categories remain visible. Business administration stays outside Shopping Master. */
 .legacy-business-tab,#view-business,#businessPanel{display:none!important}
 .purpose-picker .field-caption{font-size:10px;letter-spacing:1px}
@@ -88,3 +88,6 @@ body.dark{color-scheme:dark;--bg:#0c1220;--surface:#151e30;--surface-2:#1c273b;-
  .mobile-add{bottom:calc(88px + env(safe-area-inset-bottom))!important;right:17px;z-index:20}
  .qty-stepper strong{min-width:30px;font-variant-numeric:tabular-nums}
 }
+
+/* V26 barcode scanner controls */
+.scanner-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.barcode-scanner video{min-height:180px;object-fit:contain;touch-action:pan-y}
