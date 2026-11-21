@@ -1,4 +1,4 @@
-ISWAPPRO SHOPPING MASTER V23
+ISWAPPRO SHOPPING MASTER V28
 Universal purchasing and shopping manager.
 
 OPEN ON ANDROID
@@ -66,3 +66,12 @@ V27 — BARCODE RECOGNITION & PRODUCT LOOKUP
 - If the catalogue has no match or is offline, the barcode remains captured and manual entry remains available.
 - Checks barcode duplicates across shopping items and purchase inventory before saving; the user can cancel or explicitly confirm a duplicate.
 - Product lookup requires an internet connection and catalogue coverage; it is not guaranteed for every barcode or product category.
+
+
+V28 BARCODE SCANNER UPDATE
+- Preserves the native camera aspect ratio instead of forcing a landscape preview.
+- Requests continuous autofocus when supported by the device; falls back to single-shot focus when available.
+- Shows camera resolution and clearer positioning guidance.
+- Adds a zoom slider only when the camera reports hardware zoom support.
+- Keeps flashlight support conditional on device capability.
+- Barcode recognition still depends on browser BarcodeDetector support and the camera hardware. Test on the live HTTPS GitHub Pages site.

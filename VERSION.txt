@@ -1,4 +1,3 @@
 ISwapPro Shopping Master
-Version: V27
-Milestone: Barcode recognition, product lookup and duplicate protection
-Base: V26
+Version: V28
+Milestone: Barcode scanner camera preview, focus handling and supported zoom controls

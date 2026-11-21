@@ -1,1 +1,2 @@
-ISwapPro Shopping Master V27 — Barcode recognition, optional product lookup and duplicate barcode protection. See README.txt for setup and compatibility notes.
+# ISwapPro Shopping Master V28
+Universal shopping and purchasing manager. See README.txt for setup, compatibility and V28 barcode scanner notes.
